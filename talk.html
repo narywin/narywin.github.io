@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="Keywords" content="blog"/>
+    <meta name="Description" content="blog"/>
+    <title>Simple</title>
+    <link rel="shortcut icon" href="/static/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+</head>
+<body>
+<div class="main">
+    <div class="header">
+    	<ul id="pages">
+            <li><a href="/">home</a></li>
+            <li><a href="/#/tags">tags</a></li>
+            <li><a href="/#/archive">archive</a></li>
+    	</ul>
+    </div>
+	<div class="wrap-header">
+	<h1>
+    <a href="/" id="title"></a>
+	</h1>
+	</div>
+<div id="md" style="display: none;">
+<!-- markdown -->
+##Hello Everyone! Welcome to Nary Workshop.
+ ![](http://narywin.github.io/img/出发_副本.jpg)
+
+nary创意工作室自成立以来，已与多方达成合作意向，并已为多所高校的在校学生和老师，国家级、省级期刊，高等教育出版社等大中型客户提供了优质服务，赢得了广泛好评。
+
+ ![](http://narywin.github.io/img/7_副本.jpg)
+
+业务一：根据客户提供具体论文提纲、写作要点，能高质量、及时的完成写作任务，并提供售后修改服务，重复率有保证。
+
+业务三：团队中有来自国内外著名高校多种学科的研究生，为您提供多种语种翻译、书写服务，主流语言编程工作。您的满意，我们的追求！
+
+业务二：期望与更多期刊寻求合作，为更多客户提供更为专业的文笔服务。
+
+ ![](http://narywin.github.io/img/咖啡2.jpg)
+
+在这里，让我们一起畅谈未来！
+
+联系人：Miss Li
+
+联系方式：sory2008@163.com
+<!-- markdown end -->
+</div>
+<div class="entry" id="main">
+<!-- content -->
+<h2 id="helloeveryonewelcometonaryworkshop">Hello Everyone! Welcome to Nary Workshop.</h2>
+
+<p><img src="http://narywin.github.io/img/出发_副本.jpg" alt="" title=""></p>
+
+<p>nary创意工作室自成立以来，已与多方达成合作意向，并已为多所高校的在校学生和老师，国家级、省级期刊，高等教育出版社等大中型客户提供了优质服务，赢得了广泛好评。</p>
+
+<p><img src="http://narywin.github.io/img/7_副本.jpg" alt="" title=""></p>
+
+<p>业务一：根据客户提供具体论文提纲、写作要点，能高质量、及时的完成写作任务，并提供售后修改服务，重复率有保证。</p>
+
+<p>业务三：团队中有来自国内外著名高校多种学科的研究生，为您提供多种语种翻译、书写服务，主流语言编程工作。您的满意，我们的追求！</p>
+
+<p>业务二：期望与更多期刊寻求合作，为更多客户提供更为专业的文笔服务。</p>
+
+<p><img src="http://narywin.github.io/img/咖啡2.jpg" alt="" title=""></p>
+
+<p>在这里，让我们一起畅谈未来！</p>
+
+<p>联系人：Miss Li</p>
+
+<p>联系方式：sory2008@163.com</p>
+<!-- content end -->
+</div>
+<br>
+<br>
+    <div id="disqus_thread"></div>
+	<div class="footer">
+		<p>© Copyright 2014 by isnowfy, Designed by isnowfy</p>
+	</div>
+</div>
+<script src="main.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ["\\(", "\\)"]], processEscapes: true}});
+</script>
+<script id="content" type="text/mustache">
+    <h1>{{title}}</h1>
+    <div class="tag">
+    {{date}}
+    {{#tags}}
+    <a href="/#/tag/{{name}}">#{{name}}</a>
+    {{/tags}}
+    </div>
+</script>
+<script id="pagesTemplate" type="text/mustache">
+    {{#pages}}
+    <li>
+        <a href="{{path}}">{{title}}</a>
+    </li>
+    {{/pages}}
+</script>
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: "main.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+            $("#title").html(data.name);
+            var pagesTemplate = Hogan.compile($("#pagesTemplate").html());
+            var pagesHtml = pagesTemplate.render({"pages": data.pages});
+            $("#pages").append(pagesHtml);
+            //path
+            var path = "talk.html";
+            //path end
+            var now = 0;
+            for (var i = 0; i < data.posts.length; ++i)
+                if (path == data.posts[i].path)
+                    now = i;
+            var post = data.posts[now];
+            var tmp = post.tags.split(" ");
+            var tags = [];
+            for (var i = 0; i < tmp.length; ++i)
+                if (tmp[i].length > 0)
+                    tags.push({"name": tmp[i]});
+            var contentTemplate = Hogan.compile($("#content").html());
+            var contentHtml = contentTemplate.render({"title": post.title, "tags": tags, "date": post.date});
+            $("#main").prepend(contentHtml);
+            if (data.disqus_shortname.length > 0) {
+                var disqus_shortname = data.disqus_shortname;
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            }
+        }
+    });
+});
+</script>
+</body>
+</html>
